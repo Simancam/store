@@ -1,30 +1,25 @@
-"use client"
+"use client";
 
-import Image from "next/image"
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { motion, AnimatePresence } from "framer-motion"
+import Image from "next/image";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { motion, AnimatePresence } from "framer-motion";
+import { useCardStore } from "@/hooks/cardStore";
 
 interface HoodieCardProps {
-  name: string
-  price: number
-  image1: string
-  image2: string
+  name: string;
+  price: number;
+  image1: string;
+  image2: string;
 }
 
 export function HoodieCard({ name, price, image1, image2 }: HoodieCardProps) {
-  const [isHovered, setIsHovered] = useState(false)
+  const [isHovered, setIsHovered] = useState(false);
+  const { addItem } = useCardStore(); 
 
-  const imageVariants = {
-    initial: { scale: 1 },
-    hover: {
-      scale: 1.1,
-      transition: {
-        duration: 0.4,
-        ease: "easeOut",
-      },
-    },
-  }
+  const handleAddToCart = () => {
+    addItem({ name, price, image: image1 }); 
+  };
 
   return (
     <div className="bg-dark-800 rounded-lg overflow-hidden">
@@ -43,7 +38,10 @@ export function HoodieCard({ name, price, image1, image2 }: HoodieCardProps) {
             className="relative w-full h-full"
           >
             <motion.div
-              variants={imageVariants}
+              variants={{
+                initial: { scale: 1 },
+                hover: { scale: 1.1, transition: { duration: 0.4, ease: "easeOut" } },
+              }}
               initial="initial"
               whileHover="hover"
               className="relative w-full h-full"
@@ -62,10 +60,10 @@ export function HoodieCard({ name, price, image1, image2 }: HoodieCardProps) {
       <div className="p-4">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">{name}</h3>
         <p className="text-gray-400 mb-4">${price.toFixed(2)}</p>
-        <Button className="w-full" variant="outline">
-          Buy Now
+        <Button className="w-full" variant="outline" onClick={handleAddToCart}>
+          Add to Cart
         </Button>
       </div>
     </div>
-  )
+  );
 }
